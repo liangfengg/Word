@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csdj.word.mapper">
+
+    <resultMap id="sp" type="Sp">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="jg" property="jg"/>
+        <result column="kc" property="kc"/>
+        <result column="xl" property="xl"/>
+
+    </resultMap>
+
+    <resultMap id="orderformList" type="Orderform">
+        <id column="did" property="did"/>
+        <result column="start" property="start"/>
+        <result column="cont_count" property="cont_count"/>
+        <result column="count_money" property="count_money"/>
+        <collection property="objOrderdetailed" ofType="Orderdetailed">
+            <id column="mid" property="mid"/>
+            <result column="name" property="name"/>
+            <result column="img" property="img"/>
+            <result column="price" property="price"/>
+            <result column="mdid" property="mdid"/>
+        </collection>
+
+    </resultMap>
+
+
+
+
+
+
+
+
+
+</mapper>

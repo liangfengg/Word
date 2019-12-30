@@ -1,10 +1,10 @@
 package com.csdj.word.entity;
-
+/**
+ *
+ * 杨昭林
+ */
 public class Write {
-    /**
-     *
-     * 杨昭林
-     */
+
 
 
 
