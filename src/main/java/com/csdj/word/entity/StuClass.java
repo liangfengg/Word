@@ -1,7 +1,8 @@
 package com.csdj.word.entity;
+
 /**
  * @ClassName StuClass
- * @Description 
+ * @Description
  * @Author 周佳良
  * @Date 2019/12/30 8:25
  * @Version 1.0
