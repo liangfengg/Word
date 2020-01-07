@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csdj.word.mapper.TeacherMapper">
+
+    <resultMap id="tmap" type="Teacher">
+        <id column="tid" property="tid"/>
+        <result column="tname" property="tname"/>
+        <result column="cid" property="cid"/>
+        <result column="tpwd" property="tpwd"/>
+        <result column="tphone" property="tphone"/>
+    </resultMap>
+
+    <select id="login" resultType="Integer">
+        SELECT COUNT(1) FROM teacher WHERE tname=#{tname} AND tpwd=#{tpwd}
+    </select>
+
+    <update id="updateTeacher">
+        update teacher set tpwd=#{tpwd} where tname=#{tname}
+    </update>
+</mapper>

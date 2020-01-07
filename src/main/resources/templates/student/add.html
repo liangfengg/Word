@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script type="text/javascript" src="/js/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body onload="findCriId()">
+<br>
+<div class="layui-form">
+    <input type="hidden" id="parentid">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-sm6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学生姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="stuname" id="stuname">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学生密码</label>
+                    <div class="layui-input-inline" id="criSex">
+                        <input type="password" class="layui-input" name="stupwd" id="stupwd">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <div class="layui-col-sm6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学生电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="stuphone" id="stuphone">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">家长电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="parphone" id="parphone">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-sm4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">班级名称</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="cid" name="cid" id="cid">
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <div class="layui-col-sm7" style="text-align: right;">
+                <button type="button" class="layui-btn layui-btn-sm" id="btnAdd" name="btnAdd">
+                    <i class="layui-icon layui-icon-ok"></i>保存
+                </button>
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="btnCancel" name="btnCancel">
+                    <i class="layui-icon layui-icon-close"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['layer', 'element', 'form', 'laydate'], function () {
+        var layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            element = layui.element,
+            $ = layui.jquery;
+
+        form.render();
+    })
+</script>
+<script>
+
+    findCriTerm();
+
+    function findCriTerm() {
+        $.ajax({
+            type: 'post',
+            url: 'findClass',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                var h = "<option value='0'></option>"
+                for (var i = 0; i < data.length; i++) {
+                    var c = data[i];
+                    h = h + "<option value=" + c.cid + ">" + c.cname + "</option>";
+                }
+                // $.each(data, function (a, b) {
+                //     h = h + "<option value=" + b.tid + ">" + b.tname + "</option>";
+                // })
+                $("#cid").html(h)
+                layui.form.render("select");
+            },
+            error: function () {
+                layer.msg("ajax错误！", {icon: 2, time: 1000})
+            }
+        })
+    }
+</script>
+<script type="text/javascript">
+    $("document").ready(function () {
+        var fid = parent.$("#fid").val();
+        $("#parentid").val(fid);
+    });
+</script>
+
+<script>
+    $("#btnAdd").click(function () {
+        var id = $("#parentid").val();
+
+        if (id <= 0) {
+            $.ajax({
+                type: 'post',
+                url: 'addStu',
+                data: {
+                    stuname: $("#stuname").val(),
+                    stupwd: $("#stupwd").val(),
+                    stuphone: $("#stuphone").val(),
+                    parphone: $("#parphone").val(),
+                    cid: $("#cid").val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data > 0) {
+                        layer.msg("添加成功！", {
+                            icon: 6,
+                            time: 1000
+                        }, function () {
+                            parent.location.reload();
+                        });
+                    } else {
+                        layer.msg("添加失败！", {
+                            icon: 5,
+                            time: 1000
+                        })
+                    }
+                },
+                error: function () {
+                    layer.msg("ajax错误！", {icon: 2, time: 1000})
+                }
+            })
+        } else {
+            $.ajax({
+                type: "post",
+                url: "updateStu",
+                data: {
+                    stuid: id,
+                    stuname: $("#stuname").val(),
+                    stupwd: $("#stupwd").val(),
+                    stuphone: $("#stuphone").val(),
+                    parphone: $("#parphone").val(),
+                    cid: $("#cid").val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data > 0) {
+                        layer.msg("操作成功", {
+                            icon: 1,
+                            time: 1000
+                        }, function () {
+                            parent.location.reload();
+                        });
+                    } else {
+                        layer.msg("操作失败", {
+                            icon: 2,
+                            time: 1000
+                        });
+                    }
+                },
+                error: function () {
+                    layer.msg("ajax执行错误！", {
+                        icon: 2,
+                        time: 1000
+                    });
+                }
+            });
+        }
+
+    })
+</script>
+<script>
+    function findCriId() {
+        var pid = $("#parentid").val();
+        if (pid > 0) {
+            $.ajax({
+                type: "post",
+                url: "findStuIdById",
+                data: {
+                    stuid: pid
+                },
+                dataType: "json",
+                success: function (data) {
+                    stuname: $("#stuname").val(data.stuname);
+                    stupwd: $("#stupwd").val(data.stupwd);
+                    stuphone: $("#stuphone").val(data.stuphone);
+                    parphone: $("#parphone").val(data.parphone);
+                    cid: $("#cid").val(data.cid);
+                    layui.use(['form'], function () {
+                        var form = layui.form;
+                        form.render();
+                    })
+                },
+                error: function () {
+                    layer.msg("ajax执行错误！", {
+                        icon: 2,
+                        time: 1000
+                    });
+                }
+            });
+        }
+    }
+</script>
+<script type="text/javascript">
+    //关闭按钮
+    $(function () {
+        $("#btnCancel").click(function () {
+            parent.window.location.reload();
+            //刷新父级页面
+            var index = parent.layer.getFrameIndex(window.name); //获取当前页面索引
+            parent.layer.close(index); //关闭当前页面
+        });
+    });
+</script>
+</html>

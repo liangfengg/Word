@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csdj.word.mapper.PaperMapper">
+
+
+    <resultMap id="pmap" type="Paper">
+        <id column="pid" property="pid"/>
+        <result column="pnum" property="pnum"/>
+        <result column="wordId" property="wordId"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="cid" property="cid"/>
+        <result column="userName" property="userName"/>
+
+        <!--        <association property="stuClass" javaType="StuClass">-->
+        <!--            <id column="cid" property="cid"/>-->
+        <!--            <result column="cname" property="cname"/>-->
+        <!--        </association>-->
+
+        <!--        <association property="word" javaType="Word">-->
+        <!--            <id column="wordid" property="wordid"/>-->
+        <!--            <result column="wordmeaning" property="wordmeaning"/>-->
+        <!--            <result column="word" property="word"/>-->
+        <!--        </association>-->
+    </resultMap>
+
+    <resultMap id="wmap" type="Word">
+        <id column="wordid" property="wordid"/>
+        <result column="wordmeaning" property="wordmeaning"/>
+        <result column="word" property="word"/>
+    </resultMap>
+
+    <insert id="addPaper">
+        insert into paper(pnum,wordid,startdate,enddate,cid,username)
+        values (#{pnum},#{wordId},#{startDate},#{endDate},#{cid},#{userName})
+    </insert>
+
+    <select id="findWordList" resultMap="wmap">
+        SELECT * FROM word ORDER BY RAND() LIMIT 20
+    </select>
+
+    <select id="findExamList" resultMap="pmap">
+        SELECT DISTINCT pnum,startdate,enddate,cid,username FROM paper
+        WHERE enddate>NOW() AND NOW()>startdate AND cid=#{cid}
+    </select>
+
+    <select id="findCount" resultType="int" parameterType="int">
+        SELECT COUNT(DISTINCT pnum) FROM paper
+        WHERE enddate>NOW() AND NOW()>startdate AND cid=#{cid}
+    </select>
+
+    <select id="findPaperList" resultMap="pmap">
+        SELECT pid,wordid FROM paper WHERE pnum=#{pnum} AND cid=#{cid}
+    </select>
+
+    <select id="findPaperMarkList" resultMap="pmap">
+        SELECT DISTINCT p.pnum,startdate,enddate,p.cid,username FROM paper p JOIN mark m ON p.cid=m.cid
+        WHERE m.pnum=p.pnum AND p.cid=#{cid} AND stuid=#{stuid}
+    </select>
+</mapper>

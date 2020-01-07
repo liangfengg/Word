@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/common/layui/css/layui.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/css/login.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-canvs"></div>
+<div class="layui-layout layui-layout-login">
+    <h1>
+        <!--        <strong>《三年二班后台管理系统》</strong>-->
+        <!--        <em>Pohlad kocce usi</em>-->
+    </h1>
+    <form action="login.do" method="post">
+
+        <div class="layui-user-icon larry-login">
+            <input type="text" placeholder="用户名" class="login_txtbx" name="tname" id="tname" required/>
+        </div>
+        <div class="layui-pwd-icon larry-login">
+            <input type="password" placeholder="密码" class="login_txtbx" name="tpwd" id="tpwd" required/>
+        </div>
+        <div class="layui-user-icon larry-login">
+            <select class="login_txtbx" id="role" name="role" style="width: 350px;height: 40px;">
+                <option value="1" style="height: 30px">教师</option>
+                <option value="2" style="height: 30px">学生</option>
+            </select>
+            <!--            <input type="text" placeholder="用户名" class="login_txtbx" name="count" id="count" required />-->
+        </div>
+        <div class="layui-submit larry-login">
+            <input type="submit" value="立即登陆" class="submit_btn" id="submit_btn"/>
+        </div>
+    </form>
+    <div class="layui-login-text">
+        <!--        <p>©版权:长沙旭融文化传播有限公司</p>-->
+        <!--        <p>地区:长沙</p>-->
+    </div>
+</div>
+<script type="text/javascript" src="/common/layui/lay/dest/layui.all.js"></script>
+<script type="text/javascript" src="/js/login.js"></script>
+<script type="text/javascript" src="/jsplug/jparticle.jquery.js"></script>
+<script>
+    layui.use(['layer', 'element', 'form', 'laydate'], function () {
+        var layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            element = layui.element,
+            $ = layui.jquery;
+    })
+</script>
+<script type="text/javascript">
+    $(function () {
+        $(".layui-canvs").jParticle({
+            background: "#141414",
+            color: "#E6E6E6"
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/common/layui/css/layui.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css">
+    <script type="text/javascript" src="/js/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+<section class="layui-larry-box">
+    <div class="larry-personal">
+        <!--        <header class="larry-personal-tit">-->
+        <!--            <span>修改密码</span>-->
+        <!--        </header>&lt;!&ndash; /header &ndash;&gt;-->
+        <div class="larry-personal-body clearfix changepwd">
+
+            <div class="layui-form">
+                <div class="layui-container">
+                    <div class="layui-row">
+                        <div class="layui-col-sm6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">试卷号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" autocomplete="off"
+                                           th:value="${session.nowDate}"
+                                           name="pnum" id="pnum" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        <div class="layui-col-sm6">-->
+                        <!--                            <div class="layui-form-item">-->
+                        <!--                                <label class="layui-form-label">出题数量</label>-->
+                        <!--                                <div class="layui-input-inline">-->
+                        <!--                                    <select lay-filter="cid" name="limit" id="limit">-->
+                        <!--                                        <option value="10">10</option>-->
+                        <!--                                        <option value="20">20</option>-->
+                        <!--                                        <option value="50">50</option>-->
+                        <!--                                    </select>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+                        <div id="aa" hidden>
+                            <!--                <input type="text" class="layui-input" autocomplete="off"-->
+                            <!--                       name="wordid" id="wordid" disabled>-->
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-sm6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">开始时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" name="startDate" id="startDate">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-sm6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">结束时间</label>
+                                <div class="layui-input-inline" id="criSex">
+                                    <input type="text" class="layui-input" name="endDate" id="endDate">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row">
+                        <div class="layui-col-sm6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">班级名称</label>
+                                <div class="layui-input-inline">
+                                    <select lay-filter="cid" name="cid" id="cid">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-sm6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">出题姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" autocomplete="off" name="userName"
+                                           id="userName" th:value="${session.tname}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row">
+                        <div class="layui-col-sm7">
+                            <button type="button" class="layui-btn layui-btn-sm" id="btnAdd" name="btnAdd">
+                                <i class="layui-icon layui-icon-ok"></i>发布
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+
+<script>
+    $.ajax({
+        type: 'post',
+        url: 'wordList',
+        data: {},
+        dataType: 'json',
+        success: function (data) {
+            var h = ""
+            for (var i = 0; i < data.length; i++) {
+                var c = data[i];
+                h = h + "<input type='text' value=" + c.wordid + " class='layui-input' autocomplete='off' name='wordId' id='wordId' disabled>";
+            }
+            // $.each(data, function (a, b) {
+            //     h = h + "<option value=" + b.tid + ">" + b.tname + "</option>";
+            // })
+            $("#aa").html(h)
+            // layui.form.render("select");
+        },
+        error: function () {
+            layer.msg("ajax错误！", {icon: 2, time: 1000})
+        }
+    })
+</script>
+<!--<script type="text/javascript">-->
+<!--    $("document").ready(function () {-->
+<!--        var t = new Date();//获取当前时间-->
+<!--        var year = t.getFullYear();//获取当前时间年份-->
+<!--        var month = t.getMonth();//获取当前时间月份-->
+<!--        var day = t.getDate();//获取当前时间日-->
+<!--        var week = t.getDay();//获取当前时间星期-->
+<!--        var arr = new Array("星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日");-->
+<!--        //上行是为规划星期的输出-->
+<!--        //下3行分别获得当前时间的时 分 秒-->
+<!--        var hour = t.getHours();-->
+<!--        var minute = t.getMinutes();-->
+<!--        var second = t.getSeconds();-->
+<!--        var nowTime = year + "" + month + "" + day + "" + hour + "" + minute + "" + second;-->
+<!--        $("#pnum").val(nowTime);-->
+<!--    })-->
+<!--</script>-->
+
+<script>
+    layui.use(['layer', 'element', 'form', 'laydate'], function () {
+        var layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            element = layui.element,
+            $ = layui.jquery;
+        laydate.render({
+            elem: '#startDate',
+            format: 'yyyy-MM-dd HH:mm'
+        })
+        laydate.render({
+            elem: '#endDate',
+            format: 'yyyy-MM-dd HH:mm'
+        })
+    })
+</script>
+<script>
+
+    findClass();
+
+    function findClass() {
+        $.ajax({
+            type: 'post',
+            url: 'findClass',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                var h = "<option value='0'></option>"
+                for (var i = 0; i < data.length; i++) {
+                    var c = data[i];
+                    h = h + "<option value=" + c.cid + ">" + c.cname + "</option>";
+                }
+                // $.each(data, function (a, b) {
+                //     h = h + "<option value=" + b.tid + ">" + b.tname + "</option>";
+                // })
+                $("#cid").html(h)
+                layui.form.render("select");
+            },
+            error: function () {
+                layer.msg("ajax错误！", {icon: 2, time: 1000})
+            }
+        })
+    }
+</script>
+
+<script>
+    $("#btnAdd").click(function () {
+        var wordId = new Array();
+        var b = $("input[name='wordId']");
+        for (var i = 0; i < b.length; i++) {
+            wordId[i] = b[i].value;
+        }
+        $.ajax({
+            type: 'post',
+            url: 'addPaper',
+            data: {
+                pnum: $("#pnum").val(),
+                wordId: wordId,
+                startDate: $("#startDate").val(),
+                endDate: $("#endDate").val(),
+                cid: $("#cid").val(),
+                userName: $("#userName").val()
+            },
+            dataType: 'json',
+            async: false,
+            traditional: true,
+            success: function (data) {
+                if (data > 0) {
+                    layer.msg("发布成功！", {
+                        icon: 6,
+                        time: 1000
+                    }, function () {
+                        // parent.location.reload();
+                    });
+                } else {
+                    layer.msg("发布失败！", {
+                        icon: 5,
+                        time: 1000
+                    })
+                }
+            },
+            error: function () {
+                layer.msg("ajax错误！", {icon: 2, time: 1000})
+            }
+        })
+    })
+</script>
+</html>

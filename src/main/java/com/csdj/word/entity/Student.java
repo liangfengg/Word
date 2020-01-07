@@ -1,16 +1,22 @@
 package com.csdj.word.entity;
 
-/**
- * 杨昭林
- */
 public class Student {
+    private int stuid;
+    private String stuname;
+    private String stupwd;
+    private String stuphone;
+    private String parphone;
+    private int cid;
 
-    private int stuid; //学生id
-    private String stuname; //学生姓名
-    private String stupwd; //学生密码
-    private String stuphone; //学生手机号
-    private String parphone; //家长手机号
-    private int cid; //引用班级表id
+    private StuClass stuclass;
+
+    public StuClass getStuclass() {
+        return stuclass;
+    }
+
+    public void setStuclass(StuClass stuclass) {
+        this.stuclass = stuclass;
+    }
 
     public int getStuid() {
         return stuid;
@@ -59,7 +65,4 @@ public class Student {
     public void setCid(int cid) {
         this.cid = cid;
     }
-
-
-
 }

@@ -15,6 +15,33 @@ public class Paper {
     private String endDate;//试卷结束时间
     private int cid;//引用班级表id
     private String userName;//出题姓名
+    private StuClass stuClass;
+    private Word word;
+    private Mark mark;
+
+    public Mark getMark() {
+        return mark;
+    }
+
+    public void setMark(Mark mark) {
+        this.mark = mark;
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public void setWord(Word word) {
+        this.word = word;
+    }
+
+    public StuClass getStuClass() {
+        return stuClass;
+    }
+
+    public void setStuClass(StuClass stuClass) {
+        this.stuClass = stuClass;
+    }
 
     public int getPid() {
         return pid;

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csdj.word.mapper.StuMapper">
+
+    <resultMap id="cmap" type="StuClass">
+        <id column="cid" property="cid"/>
+        <result column="cname" property="cname"/>
+    </resultMap>
+
+    <resultMap id="smap" type="Student">
+        <id column="stuid" property="stuid"/>
+        <result column="stuname" property="stuname"/>
+        <result column="stupwd" property="stupwd"/>
+        <result column="stuphone" property="stuphone"/>
+        <result column="parphone" property="parphone"/>
+        <result column="cid" property="cid"/>
+
+        <association property="stuclass" javaType="StuClass">
+            <id column="cid" property="cid"/>
+            <result column="cname" property="cname"/>
+        </association>
+
+    </resultMap>
+
+
+    <select id="findClass" resultMap="cmap">
+        select * from stuclass;
+    </select>
+
+    <select id="findStu" resultMap="smap">
+        select s.*,c.cid,c.cname from student s join stuclass c on s.cid=c.cid
+        <where>
+            <if test="stuname != null and stuname != ''">
+                and stuname like CONCAT('%',#{stuname},'%')
+            </if>
+        </where>
+        limit #{currPage},#{pageSize}
+    </select>
+
+
+    <select id="findStuCount" resultType="int" parameterType="int">
+        select count(1) from student s join stuclass c on s.cid=c.cid
+        <where>
+            <if test="stuname != null and stuname != ''">
+                and stuname like CONCAT('%',#{stuname},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="addStu">
+        insert into student(stuname,stupwd,stuphone,parphone,cid)
+        values (#{stuname},#{stupwd},#{stuphone},#{parphone},#{cid})
+    </insert>
+
+    <delete id="delStu">
+        delete from student where stuid=#{stuid}
+    </delete>
+
+    <select id="findStuIdById" resultMap="smap">
+        select * from student where stuid=#{stuid}
+    </select>
+
+    <update id="updateStu">
+        update student set stuname=#{stuname},stupwd=#{stupwd},stuphone=#{stuphone}
+        ,parphone=#{parphone},cid=#{cid}
+        where stuid=#{stuid}
+    </update>
+
+    <select id="stuLogin" resultMap="smap">
+        select * from student where stuname=#{stuname};
+    </select>
+</mapper>

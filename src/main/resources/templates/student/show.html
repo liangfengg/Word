@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script type="text/javascript" src="/js/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+
+<br>
+<div class="layui-container" style="width: 100%;">
+    <div class="layui-row">
+        <form class="layui-form">
+            <div class="layui-col-sm4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学生姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="stuname" name="stuname" autocomplete="off" placeholder="请输入学生姓名"
+                               class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm3" style="float: right">
+                <button type="button" class="layui-btn" id="btnSave"
+                        data-type="findStu">
+                    <i class="layui-icon">&#xe615;</i>查询
+                </button>
+                <button type="button" id="add" class="layui-btn" data-method="add">
+                    <i class="layui-icon">&#xe654;</i>添加
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-sm12">
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <input type="hidden" id="fid">
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container demoTable">
+                    <!--                    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>-->
+                    <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+                </div>
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">
+                    <i class="layui-icon">&#xe642;</i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+                    <i class="layui-icon">&#xe640;</i>删除</a>
+
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['table'], function () {
+        var table = layui.table;
+        $ = layui.jquery;
+        table.render({
+            elem: '#test',
+            url: 'findStu',
+            page: true, //开启分页
+            limit: 5, //默认5条数据一页
+//				height: 300, //高度
+            limits: [5, 10, 20, 50, 100], //数据分页条
+            id: "idTest",
+            toolbar: '#toolbarDemo', //开启头部工具栏，并为其绑定左侧模板
+            cols: [
+                [{type: 'checkbox', fixed: 'left'},
+                    {field: 'stuid', width: 144, title: '编号', sort: true},
+                    {field: 'stuname', width: 180, title: '学生姓名', sort: true},
+                    {field: 'stuphone', width: 180, title: '学生电话'},
+                    {field: 'parphone', width: 180, title: '家长电话'},
+                    {templet: '<div>{{d.stuclass.cname}}</div>', width: 160, title: '班级名称'},
+                    {fixed: 'right', title: "操作", toolbar: "#barDemo", width: 200}
+                ]
+            ]
+        });
+
+        var $ = layui.$, active = {
+            findStu: function () {
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        stuname: $('#stuname').val()
+                    }
+                });
+            }
+        };
+        //查询按钮
+        $("#btnSave").on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    var strJson = JSON.stringify(data);
+                    var objJson = eval('(' + strJson + ')');
+                    $.each(objJson, function (a, b) {
+                        layer.alert(b.id)
+                    })
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'detail') {
+                layer.msg('ID：' + data.id + ' 的查看操作');
+            } else if (obj.event === 'del') {
+                layer.confirm('是否删除数据！', function (index) {
+                    $.ajax({
+                        type: "post",
+                        url: "delStu",
+                        data: {
+                            stuid: data.stuid
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data > 0) {
+                                layer.msg("操作成功", {icon: 1, time: 1000}, function () {
+                                    parent.location.reload();
+                                });
+                            } else {
+                                layer.msg("操作失败", {icon: 2, time: 1000});
+                            }
+                        },
+                        error: function () {
+                            layer.msg("ajax执行错误！", {icon: 2, time: 1000});
+                        }
+                    });
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                $("#fid").val(data.stuid);
+                layer.open({
+                    type: 2,
+                    title: '编辑信息',
+                    //maxmin: true, //最大最小窗口
+                    offset: 'auto',//位置居中
+                    shadeClose: true, //点击遮罩关闭层
+                    shade: 0.5,  //不显示遮罩
+                    anim: 0,
+                    area: ['1000px', '500px'],
+                    content: 'add'//弹框显示的url,对应的页面
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $("document").ready(function () {
+        $("#add").click(function () {
+            $("#fid").val(0);
+            layer.open({
+                type: 2,
+                title: '添加信息',
+                //maxmin: true, //最大最小窗口
+                offset: 'auto',//位置居中
+                shadeClose: true, //点击遮罩关闭层
+                shade: 0.5,  //不显示遮罩
+                anim: 0,
+                area: ['1000px', '500px'],
+                content: 'add'//弹框显示的url,对应的页面
+            });
+        });
+    });
+</script>
+</html>

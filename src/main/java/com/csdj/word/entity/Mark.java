@@ -10,9 +10,9 @@ package com.csdj.word.entity;
 public class Mark {
     private int mid;//分数id
     private int stuId;//引用学生表id
-    private int pid; //引用试卷表id
+    private String pnum; //试卷号
     private int cid; //引用班级表id
-    private double score; //学生分数
+    private int score; //学生分数
     private String remark; //备注
     private int isFlag;//发送家长 1是 0否
 
@@ -32,12 +32,12 @@ public class Mark {
         this.stuId = stuId;
     }
 
-    public int getPid() {
-        return pid;
+    public String getPnum() {
+        return pnum;
     }
 
-    public void setPid(int pid) {
-        this.pid = pid;
+    public void setPnum(String pnum) {
+        this.pnum = pnum;
     }
 
     public int getCid() {
@@ -48,11 +48,11 @@ public class Mark {
         this.cid = cid;
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(int score) {
         this.score = score;
     }
 

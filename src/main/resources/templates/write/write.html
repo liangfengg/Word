@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="http://tiku.kgc.cn/resources/V11.8.0.2/css/ytk_css.css">
+    <link rel="stylesheet" type="text/css" href="/css/write.css"/>
+    <!--    <link rel="stylesheet" type="text/css" href="css/examList.css">-->
+    <link rel="stylesheet" type="text/css" href="layui/css/layui.css">
+
+    <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <style type="text/css">
+        .rt_content_nr ul li {
+            width: 26px;
+            height: 26px;
+            text-align: center;
+            line-height: 25px;
+            float: left;
+            margin: 10px 0 0 11px;
+            background: #DCDCDC;
+            /*display: inline;*/
+        }
+
+        .rt_content_nr ul li a {
+            color: black;
+        }
+
+        .hasBeenAnswer {
+            background: #5A5A5A;
+
+        }
+
+        .a {
+            color: #FFFFFF;
+        }
+
+        /*.b{*/
+        /*    src:url("/image/灰.png");*/
+        /*}*/
+
+
+        header {
+
+            /* 我们希望 header 采用固定的高度，只占用必须的空间 */
+            /* 0 flex-grow, 0 flex-shrink, auto flex-basis */
+            flex: 0 0 auto;
+        }
+
+        .main-content {
+
+
+            /*margin-top:10px;*/
+            /* 将 flex-grow 设置为1，该元素会占用全部可使用空间
+               而其他元素该属性值为0，因此不会得到多余的空间*/
+            /* 1 flex-grow, 0 flex-shrink, auto flex-basis */
+            flex: 1 0 auto;
+        }
+
+        footer {
+            /* 和 header 一样，footer 也采用固定高度*/
+            /* 0 flex-grow, 0 flex-shrink, auto flex-basis */
+            flex: 0 0 auto;
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" th:value="${session.endDate}" id="endDate">
+<input type="hidden" id="pnum" name="pnum" th:value="${session.pnum}">
+<header id="basic-header">
+    <!-- header -->
+    <div class="header-content">
+        <!--        <div class="img-1"></div>-->
+        <!--        <div class="rec"></div>-->
+        <div class="text-1" style="margin-left: 50px;">单词默写</div>
+        <ul class="header-nav">
+            <!-- <li><a href="#">我的评测</a></li>
+            <li><a href="#">测试历史</a></li>
+            <li><a href="#">错题本</a></li>
+            <li><a href="#">收藏本</a></li>
+            <li><a href="#">试题广场</a></li> -->
+            <input type="hidden" id="nowUrl" value="decorator/basic-theme.jsp">
+            <li seq="0">
+                <a href="#" title="我的自测">我的自测</a>
+            </li>
+            <input type="hidden" id="nowUrl" value="decorator/basic-theme.jsp">
+            <li seq="1" style="background-color: black">
+                <a href="examList" title="统一测试">统一测试</a>
+                <span th:if="${session.count > 0}">
+                    <span class="layui-badge" style="margin-left: 5px;" th:text="${session.count}"></span>
+                </span>
+            </li>
+            <input type="hidden" id="nowUrl" value="decorator/basic-theme.jsp">
+            <li seq="2">
+                <a href="historyList" title="我的历史">我的历史</a>
+            </li>
+            <li><a href="#" title="试题广场" target="">试题广场</a></li>
+            <li><a href="#" title="课程" target="">课程</a></li>
+        </ul>
+        <div class="right">
+            <!--            <a class="user-face"></a>-->
+            <a class="user-info" href="javascript:;">账户名： <span th:text="${session.student.stuname}"></span></a>
+            <div class="esc">
+                <a href="loginExit.do" title="">退出</a>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="main main-content" style="margin-top:60px;position: relative; display: block;z-index: 1">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-sm10">
+                <div id="fixed">
+                    <div id="timeLeftDiv" class="time blue acenter">
+                        <p class="f14">剩余时间</p>
+                        <p id="countDown"></p>
+                    </div>
+                    <a id="submit" href="javascript:void(0);"
+                       class="f14 rest acenter pater">我 要 交 卷</a>
+                    <div class="sec5 sec-dtk">
+                        <div id="themeCard" style="text-align: center;" class="card acenter white">
+                            答题卡
+                        </div>
+                        <div id="answerCardDiv" th:each="wordList,word: ${session.wordList}" class="size blue"
+                             style="height: 320px;">
+                            <ul id="cardNum">
+                                <li>
+                                    <a id="answerBtnHref1250887" th:text="${word.index+1}"
+                                       class="questionHref">1</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="nr_right">
+                        <div class="nr_rt_main">
+                            <div class="rt_nr1">
+                                <div class="rt_content">
+                                    <div class="rt_content_nr answerSheet">
+                                        <ul>
+                                            <li th:each="wordList,userStat : ${session.wordList}">
+                                                <a th:href="'#qu_0_'+${userStat.index}"
+                                                   th:text="${userStat.index+1}">1</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sec sub-bd" style="width: 68%;margin-left: 240px;z-index: 1">
+                    <form action="judge" method="post" id="formSubmit">
+                        <div th:each="wordList,userStat : ${session.wordList}">
+                            <div class='sec2' th:id="'qu_0_'+${userStat.index}">
+                                <div>
+                                    <img style="width: 120px;height: 120px;position: relative;bottom: 50px"
+                                         src="/image/黄.png">
+                                    <span style="position: relative;right:105px;bottom: 38px;font-weight:bold;font-size: 20px;color: #FFFFFF"
+                                          th:text="${userStat.index+1}"></span>
+                                    <span style='margin-left: 100px;margin-bottom: 100px;font-size: 18px;font-weight: bold'
+                                          class='wordmeaning'>中文：<span
+                                            th:text="${wordList.wordmeaning}"></span></span>
+                                    <div class='lf-font'>
+                                        <p style="margin-left: 30px;">
+                                            <input style="text-align: center" type='text' class='input'
+                                                   autocomplete='off'
+                                                   name='writeword' id='writeword'>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer id="basicBottom"><p>©2019 单词默写考试网</p></footer>
+<input type="hidden" th:value="${session.mark}" id="mark">
+<input type="hidden" th:value="${session.flag}" id="flag">
+</body>
+<!--<script>-->
+<!--    if (window.location.hash.indexOf('#') >= 0) {-->
+<!--        $('html,body').animate({-->
+<!--                scrollTop: ($(window.location.hash).offset().top - 50) + "px"-->
+<!--            },-->
+<!--            300);-->
+<!--    };-->
+<!--</script>-->
+<script>
+    $(".input").blur(function () {
+        // debugger;
+        var examId = $(this).parent().parent().parent().parent().attr('id');
+        // alert(examId)
+        var cardLi = $("a[href='#" + examId + "']").parent();
+        // alert(cardLi)
+        if ($(this).val() != "") {
+
+            // 设置已答题
+            if (!cardLi.hasClass('hasBeenAnswer')) {
+                cardLi.addClass('hasBeenAnswer');
+                cardLi.children().addClass("a");
+                // examId.children().children("img").addClass("b");
+            }
+        }
+        if ($(this).val() == "") {
+            if (cardLi.hasClass('hasBeenAnswer')) {
+                cardLi.removeClass('hasBeenAnswer');
+                cardLi.children().removeClass("a");
+            }
+        }
+    })
+</script>
+<script>
+    layui.use(['layer', 'element', 'form', 'laydate'], function () {
+        var layer = layui.layer,
+            laydate = layui.laydate,
+            form = layui.form,
+            element = layui.element,
+            $ = layui.jquery;
+    })
+
+    layui.use('layer', function () {
+        layer = layui.layer;
+        showMark();
+    });
+</script>
+<script>
+    $("#submit").click(function () {
+        layer.confirm("请问是否交卷？", {
+            btn: ["确定", "取消"]
+        }, function (index) {
+            $("form").submit();
+        }, function () {
+
+        });
+    });
+</script>
+<script>
+    function show(a, b) {
+        var date1 = new Date(a); //开始时间
+        var date2 = new Date(b); //结束时间
+        var date3 = date2.getTime() - date1.getTime(); //时间差的毫秒数
+
+        //计算出相差天数
+        var days = Math.floor(date3 / (24 * 3600 * 1000))
+
+        //计算出小时数
+
+        var leave1 = date3 % (24 * 3600 * 1000) //计算天数后剩余的毫秒数
+        var hours = Math.floor(leave1 / (3600 * 1000))
+        //计算相差分钟数
+        var leave2 = leave1 % (3600 * 1000) //计算小时数后剩余的毫秒数
+        var minutes = Math.floor(leave2 / (60 * 1000))
+
+        //计算相差秒数
+        var leave3 = leave2 % (60 * 1000) //计算分钟数后剩余的毫秒数
+        var seconds = Math.round(leave3 / 1000)
+
+        // log("倒计时： "+days+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒");
+        // var str = "倒计时： " + days + "天 " + hours + "小时 " + minutes + " 分钟" + seconds + " 秒";
+        if (days > 0) {
+            str = days + "天 ";
+        } else if (hours > 0) {
+            str = hours + "小时 ";
+        } else {
+            str = minutes + ":" + seconds + "";
+        }
+        document.getElementById("countDown").innerHTML = str;
+    }
+
+    var stringTime = $("#endDate").val();
+    var endtimes = new Date(stringTime).getTime();
+
+    //获取当前时间的时间戳
+    function getTimeMillin() {
+        return new Date().getTime();
+    }
+
+    setInterval(function () {
+        var now = getTimeMillin();
+        if (now < endtimes) {
+            show(now, endtimes);
+        } else {
+            show(now, now);
+        }
+    }, 1000);
+
+    function showMark() {
+        var flag = $("#flag").val();
+        var mark = $("#mark").val();
+        if (flag == 1) {
+            //信息框-例1
+            layer.alert('你的分数为' + mark + '分', {
+                skin: 'layui-layer-lan' //样式类名
+                , closeBtn: 0
+            }, function () {
+                location.href = "examList";
+            });
+        }
+    }
+</script>
+</html>

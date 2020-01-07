@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csdj.word.mapper.WriteMapper">
+
+    <resultMap id="wmap" type="Word">
+        <id column="wordid" property="wordid"/>
+        <result column="wordmeaning" property="wordmeaning"/>
+        <result column="word" property="word"/>
+    </resultMap>
+
+    <resultMap id="wrmap" type="Writes">
+        <id column="pid" property="pid"/>
+        <result column="writeword" property="writeword"/>
+        <result column="isright" property="isright"/>
+        <result column="writedate" property="writedate"/>
+        <result column="stuid" property="stuid"/>
+        <result column="cid" property="cid"/>
+        <association property="word" javaType="Word">
+            <id column="wordid" property="wordid"/>
+            <result column="wordmeaning" property="wordmeaning"/>
+            <result column="word" property="word"/>
+        </association>
+    </resultMap>
+
+    <select id="findWordByID" resultMap="wmap">
+        SELECT w.wordid,wordmeaning,w.word FROM paper p JOIN word w ON p.wordid = w.wordid WHERE pnum=#{pnum} AND cid=#{cid}
+    </select>
+
+    <insert id="addWrite">
+        INSERT INTO writes(pid,writeword,isright,writedate,stuid,cid) VALUES(#{pid},#{writeword},#{isright},now(),#{stuid},#{cid})
+    </insert>
+
+    <select id="findWritesList" resultMap="wrmap">
+        SELECT p.wordid,wo.word,wordmeaning,writeword,isright
+        FROM paper p,writes w,word wo
+        WHERE wo.wordid=p.wordid AND p.pid=w.pid
+        AND p.pnum =#{pnum} AND p.cid =#{cid} AND stuid=#{stuid}
+    </select>
+</mapper>
